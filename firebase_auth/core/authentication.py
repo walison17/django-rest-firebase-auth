@@ -73,12 +73,12 @@ class FirebaseAuthentication(BaseAuthentication):
             raise exceptions.AuthenticationFailed(msg)
 
         uid = payload['uid']
-        email_verified = payload.get('email_verified', False)
 
-        if not email_verified:
-            msg = _('User email not yet confirmed.')
-            raise exceptions.AuthenticationFailed(msg)
-
+        if settings.FIREBASE_EMAIL_VERIFICATION:
+            if not payload['email_verified']:
+                msg = _('User email not yet confirmed.')
+                raise exceptions.AuthenticationFailed(msg)
+            
         try:
             user = User.objects.get(**{self.uid_field: uid})
         except User.DoesNotExist:
