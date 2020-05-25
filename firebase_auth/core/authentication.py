@@ -19,7 +19,7 @@ firebase_admin.initialize_app(cred)
 
 class FirebaseAuthentication(BaseAuthentication):
     """Token based authentication using firebase."""
-
+    www_authenticate_realm = 'api'
     auth_header_prefix = 'Bearer'
     uid_field = 'username' 
 
@@ -68,12 +68,11 @@ class FirebaseAuthentication(BaseAuthentication):
         """
         Returns an active user that matches the payload's user uid and email.
         """
-        uid = payload['uid']
-
         if payload['firebase']['sign_in_provider'] == 'anonymous':
             msg = _('Firebase anonymous sign-in is not supported.')
             raise exceptions.AuthenticationFailed(msg)
 
+        uid = payload['uid']
         email_verified = payload.get('email_verified', False)
 
         if not email_verified:
@@ -98,4 +97,4 @@ class FirebaseAuthentication(BaseAuthentication):
         return User.objects.create(**fields)
 
     def authenticate_header(self, request):
-        return 'JWT realm="api"'
+        return f'{self.auth_header_prefix} realm="{self.www_authenticate_realm}"'
