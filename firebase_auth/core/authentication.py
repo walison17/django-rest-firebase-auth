@@ -38,7 +38,7 @@ class FirebaseAuthentication(BaseAuthentication):
         try:
             payload = auth.verify_id_token(firebase_token)
         except ValueError:
-            msg = _('Invalid signature.')
+            msg = _('Invalid token.')
             raise exceptions.AuthenticationFailed(msg)
         except (auth.ExpiredIdTokenError, auth.InvalidIdTokenError, auth.RevokedIdTokenError):
             msg = _('Could not log in.')
