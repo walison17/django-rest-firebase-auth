@@ -1,0 +1,9 @@
+.DS_Store
+.env
+.venv
+*.sqlite3
+*pyc
+__pycache__
+.vscode
+.coverage
+serviceAccountKey.json

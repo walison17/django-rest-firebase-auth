@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <!-- JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+    </script>
+    <title>Firebase Auth Example</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center align-items-center" style="height:100vh">
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post" autocomplete="off" id="loginForm">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="email" placeholder="email">
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control" name="password" placeholder="********">
+                            </div>
+                            <button type="submit" class="btn btn-primary">login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-auth.js"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyDJAX3xgjgtLvsQtiH9UAmxLP6zwudcB08",
+            authDomain: "fir-auth-example-8ec35.firebaseapp.com",
+            databaseURL: "https://fir-auth-example-8ec35.firebaseio.com",
+            projectId: "fir-auth-example-8ec35",
+            storageBucket: "fir-auth-example-8ec35.appspot.com",
+            messagingSenderId: "349402772026",
+            appId: "1:349402772026:web:21b5336a83bb5721017b03"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        var form = $("#loginForm");
+
+        form.submit(function (event) {
+            event.preventDefault();
+
+            var email = $(this).find('[name=email]').val();
+            var password = $(this).find('[name=password]').val();
+
+            firebase
+                .auth()
+                .signInWithEmailAndPassword(email, password)
+                .then(res => console.log(res));
+        });
+    </script>
+</body>
+
+</html>
