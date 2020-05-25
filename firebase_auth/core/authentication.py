@@ -18,7 +18,12 @@ firebase_admin.initialize_app(cred)
 
 
 class FirebaseAuthentication(BaseAuthentication):
-    """Token based authentication using firebase."""
+    """
+    Token based authentication using firebase.
+    
+    Clients should authenticate by passing a Firebase ID token in the 
+    Authorizaiton header using Bearer scheme.
+    """
     www_authenticate_realm = 'api'
     auth_header_prefix = 'Bearer'
     uid_field = 'username' 
@@ -45,7 +50,7 @@ class FirebaseAuthentication(BaseAuthentication):
 
     def get_token(self, request):
         """
-        Returns the authentication token from request
+        Returns the firebase ID token from request.
         """
         auth = get_authorization_header(request).split()
 
@@ -66,7 +71,7 @@ class FirebaseAuthentication(BaseAuthentication):
 
     def authenticate_credentials(self, payload):
         """
-        Returns an active user that matches the payload's user uid and email.
+        Returns an user that matches the payload's user uid and email.
         """
         if payload['firebase']['sign_in_provider'] == 'anonymous':
             msg = _('Firebase anonymous sign-in is not supported.')
