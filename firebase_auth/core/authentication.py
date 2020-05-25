@@ -26,7 +26,7 @@ class FirebaseAuthentication(BaseAuthentication):
     """
     www_authenticate_realm = 'api'
     auth_header_prefix = 'Bearer'
-    uid_field = 'username' 
+    uid_field = User.USERNAME_FIELD
 
     def authenticate(self, request):
         """
