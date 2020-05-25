@@ -7,14 +7,13 @@ from rest_framework.authentication import (
     BaseAuthentication, get_authorization_header
 )
 
-import firebase_admin
-from firebase_admin import auth, credentials
+from firebase_admin import auth, credentials, initialize_app
 
 
 User = get_user_model()
 
 cred = credentials.Certificate(settings.FIREBASE_APP_CREDENTIALS)
-firebase_admin.initialize_app(cred)
+initialize_app(cred)
 
 
 class FirebaseAuthentication(BaseAuthentication):
