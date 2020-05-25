@@ -85,12 +85,16 @@ class FirebaseAuthentication(BaseAuthentication):
                 raise exceptions.AuthenticationFailed(msg)
             
         try:
-            user = User.objects.get(**{self.uid_field: uid})
+            user = self.get_user(uid)
         except User.DoesNotExist:
             firebase_user = auth.get_user(uid)
             user = self.create_user_from_firebase(uid, firebase_user)
 
         return user
+
+    def get_user(self, uid: str) -> User:
+        """Returns the user with given uid"""
+        return User.objects.get(**{self.uid_field: uid})
 
     def create_user_from_firebase(self, uid: str, firebase_user: auth.UserRecord) -> User:
         """Creates a new user with firebase info"""
