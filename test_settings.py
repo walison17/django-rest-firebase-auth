@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-
     'firebase_auth'
 ]
 
@@ -135,4 +134,6 @@ REST_FRAMEWORK = {
 }
 
 FIREBASE_APP_CREDENTIALS = config('FIREBASE_APP_CREDENTIALS')
-FIREBASE_EMAIL_VERIFICATION = config('FIREBASE_EMAIL_VERIFICATION', default=False, cast=bool)
+FIREBASE_EMAIL_VERIFICATION = config(
+    'FIREBASE_EMAIL_VERIFICATION', default=False, cast=bool
+)
