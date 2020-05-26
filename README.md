@@ -1,6 +1,8 @@
 # Django Rest Firebase Auth
 Use firebase authentication with your django rest framework project
 
+[![codecov](https://codecov.io/gh/walison17/django-rest-firebase-auth/branch/master/graph/badge.svg)](https://codecov.io/gh/walison17/django-rest-firebase-auth)
+
 ## Requirements
 - Python (3.5, 3.6, 3.7 or 3.8)
 - Django >= 2.2
