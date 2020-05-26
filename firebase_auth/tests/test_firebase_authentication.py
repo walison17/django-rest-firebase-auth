@@ -6,7 +6,7 @@ from rest_framework import exceptions
 
 from firebase_admin import auth
 
-from firebase_auth.core.authentication import FirebaseAuthentication
+from firebase_auth.authentication import FirebaseAuthentication
 
 
 User = get_user_model()
@@ -105,7 +105,7 @@ def test_valid_authentication(
     firebase_authentication, firebase_payload, fake_request, user, mocker
 ):
     mocker.patch(
-        'firebase_auth.core.authentication.auth.verify_id_token',
+        'firebase_auth.authentication.auth.verify_id_token',
         return_value=firebase_payload
     )
 
@@ -119,7 +119,7 @@ def test_authenticate_with_invalid_token(
     firebase_authentication, fake_request, user, mocker
 ):
     mocker.patch(
-        'firebase_auth.core.authentication.FirebaseAuthentication.get_token',
+        'firebase_auth.authentication.FirebaseAuthentication.get_token',
         return_value=None
     )
 
@@ -169,7 +169,7 @@ def test_create_new_user_with_firebase_payload(
     }
 
     mocker.patch(
-        'firebase_auth.core.authentication.auth.get_user',
+        'firebase_auth.authentication.auth.get_user',
         return_value=auth.UserRecord(user_data)
     )
 
@@ -191,7 +191,7 @@ def test_authenticate_with_expired_token(
     mocker, side_effect, exc_message, firebase_authentication, fake_request
 ):
     mocker.patch(
-        'firebase_auth.core.authentication.auth.verify_id_token',
+        'firebase_auth.authentication.auth.verify_id_token',
         side_effect=side_effect
     )
 
