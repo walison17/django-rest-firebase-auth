@@ -32,7 +32,7 @@ Get admin credentials `.json` from the Firebase SDK and add them to your project
 Also in your project's `settings.py`:
 
 ```
-FIREBASE_APP_CREDENTIALS = 'path_to_your_credentials.json',
+FIREBASE_APP_CREDENTIALS = 'path_to_your_credentials.json'
 ```
 
 if you want to allow only users with verified emails
