@@ -1,5 +1,4 @@
 import pytest
-from unittest import mock
 
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
@@ -87,9 +86,8 @@ def test_authenticate_with_email_verification(
 
 
 @pytest.mark.django_db
-@mock.patch('firebase_auth.core.authentication.auth.get_user')
 def test_create_new_user_with_firebase_payload(
-    mocked_get_user, firebase_authentication, firebase_payload, firebase_uid
+    firebase_authentication, firebase_payload, firebase_uid, mocker
 ):
     user_data = {
         'localId': firebase_uid,
@@ -99,7 +97,10 @@ def test_create_new_user_with_firebase_payload(
         'disabled': False
     }
 
-    mocked_get_user.return_value = auth.UserRecord(user_data)
+    mocker.patch(
+        'firebase_auth.core.authentication.auth.get_user',
+        return_value=auth.UserRecord(user_data)
+    )
 
     assert not User.objects.exists()
 
@@ -115,11 +116,13 @@ def test_create_new_user_with_firebase_payload(
     [auth.InvalidIdTokenError(message='invalid id token'), _('Could not log in.')],
     [auth.RevokedIdTokenError(message='revoked id token'), _('Could not log in.')],
 ])
-@mock.patch('firebase_auth.core.authentication.auth.verify_id_token')
 def test_authenticate_with_expired_token(
-    mocked_verify_id_token, side_effect, exc_message, firebase_authentication, rf
+    mocker, side_effect, exc_message, firebase_authentication, rf
 ):
-    mocked_verify_id_token.side_effect = side_effect
+    mocker.patch(
+        'firebase_auth.core.authentication.auth.verify_id_token',
+        side_effect=side_effect
+    )
 
     request = rf.post('/token')
 
