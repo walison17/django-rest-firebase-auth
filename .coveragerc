@@ -1,0 +1,3 @@
+[run]
+source = firebase_auth/core
+omit = */migrations/*
