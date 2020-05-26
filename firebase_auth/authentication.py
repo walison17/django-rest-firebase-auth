@@ -13,12 +13,9 @@ cred = credentials.Certificate(settings.FIREBASE_APP_CREDENTIALS)
 initialize_app(cred)
 
 
-class FirebaseAuthentication(BaseAuthentication):
+class BaseFirebaseAuthentication(BaseAuthentication):
     """
-    Token based authentication using firebase.
-
-    Clients should authenticate by passing a Firebase ID token in the
-    Authorizaiton header using Bearer scheme.
+    Base implementation of token based authentication using firebase.
     """
 
     www_authenticate_realm = "api"
@@ -97,17 +94,34 @@ class FirebaseAuthentication(BaseAuthentication):
 
     def get_user(self, uid: str) -> User:
         """Returns the user with given uid"""
-        return User.objects.get(**{self.uid_field: uid})
+        raise NotImplementedError(".get_user() must be overriden.")
 
     def create_user_from_firebase(
         self, uid: str, firebase_user: auth.UserRecord
     ) -> User:
         """Creates a new user with firebase info"""
-        fields = {self.uid_field: uid, "email": firebase_user.email}
-
-        return User.objects.create(**fields)
+        raise NotImplementedError(".create_user_from_firebase() must be overriden.")
 
     def authenticate_header(self, request):
         return '{} realm="{}"'.format(
             self.auth_header_prefix, self.www_authenticate_realm
         )
+
+
+class FirebaseAuthentication(BaseFirebaseAuthentication):
+    """
+    Token based authentication using firebase.
+
+    Clients should authenticate by passing a Firebase ID token in the
+    Authorizaiton header using Bearer scheme.
+    """
+
+    def get_user(self, uid: str) -> User:
+        return User.objects.get(**{self.uid_field: uid})
+
+    def create_user_from_firebase(
+        self, uid: str, firebase_user: auth.UserRecord
+    ) -> User:
+        fields = {self.uid_field: uid, "email": firebase_user.email}
+
+        return User.objects.create(**fields)
