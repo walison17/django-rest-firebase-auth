@@ -54,11 +54,19 @@ def user(firebase_uid, db):
 
 
 @pytest.fixture
-def fake_request(rf):
-    headers = {
-        'HTTP_AUTHORIZATION': 'Bearer token'
-    }
-    return rf.post('/token', **headers)
+def make_request(rf):
+    def _make_request(token):
+        headers = {
+            'HTTP_AUTHORIZATION': token
+        }
+        return rf.post('/token', **headers)
+
+    return _make_request
+
+
+@pytest.fixture
+def fake_request(make_request):
+    return make_request('Bearer token')
 
 
 def test_default_uid_field(firebase_authentication):
@@ -69,11 +77,8 @@ def test_default_uid_field(firebase_authentication):
     ('Bearer token', b'token'),
     ('InvalidPrefix token', None)
 ])
-def test_get_token(firebase_authentication, rf, token, extracted):
-    headers = {
-        'HTTP_AUTHORIZATION': token
-    }
-    request = rf.post('/token', **headers)
+def test_get_token(firebase_authentication, make_request, token, extracted):
+    request = make_request(token)
 
     token = firebase_authentication.get_token(request)
 
@@ -87,11 +92,8 @@ def test_get_token(firebase_authentication, rf, token, extracted):
         _('Invalid Authorization header. Token string should not contain spaces.')
     ),
 ])
-def test_get_token_raises_exception(firebase_authentication, rf, token, exc_message):
-    headers = {
-        'HTTP_AUTHORIZATION': token
-    }
-    request = rf.post('/token', **headers)
+def test_get_token_raises_exception(firebase_authentication, make_request, token, exc_message):
+    request = make_request(token)
 
     with pytest.raises(exceptions.AuthenticationFailed) as exc:
         firebase_authentication.get_token(request)
