@@ -80,6 +80,25 @@ def test_get_token(firebase_authentication, rf, token, extracted):
     assert token == extracted
 
 
+@pytest.mark.parametrize('token,exc_message', [
+    ('Bearer', _('Invalid Authorization header. No credentials provided.')),
+    (
+        'Bearer token with spaces', 
+        _('Invalid Authorization header. Token string should not contain spaces.')
+    ),
+])
+def test_get_token_raises_exception(firebase_authentication, rf, token, exc_message):
+    headers = {
+        'HTTP_AUTHORIZATION': token
+    }
+    request = rf.post('/token', **headers)
+
+    with pytest.raises(exceptions.AuthenticationFailed) as exc:
+        firebase_authentication.get_token(request)
+    
+    assert exc.value.detail == exc_message
+
+
 def test_valid_authentication(
     firebase_authentication, firebase_payload, fake_request, user, mocker
 ):
@@ -178,3 +197,17 @@ def test_authenticate_with_expired_token(
         firebase_authentication.authenticate(fake_request)
 
     assert exc.value.detail == exc_message
+
+
+@pytest.mark.parametrize('auth_prefix,realm,result_header', [
+    ('Bearer', 'api', 'Bearer realm="api"'),
+    ('Token', 'api', 'Token realm="api"'),
+])
+def test_authenticate_header(
+    firebase_authentication, fake_request, auth_prefix, realm, result_header
+):
+    firebase_authentication.auth_header_prefix = auth_prefix
+
+    header = firebase_authentication.authenticate_header(fake_request)
+
+    assert header == result_header

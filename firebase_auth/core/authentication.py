@@ -62,7 +62,7 @@ class FirebaseAuthentication(BaseAuthentication):
             msg = _('Invalid Authorization header. No credentials provided.')
             raise exceptions.AuthenticationFailed(msg)
         elif len(auth) > 2:
-            msg = _('Invalid Authorization header. Credentials string should not contain spaces.')
+            msg = _('Invalid Authorization header. Token string should not contain spaces.')
             raise exceptions.AuthenticationFailed(msg)
 
         return auth[1]
