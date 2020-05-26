@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.conf import settings
-from django.utils.encoding import smart_text
 from django.utils.translation import gettext as _
 from rest_framework import exceptions
 from rest_framework.authentication import (
@@ -30,14 +29,17 @@ class FirebaseAuthentication(BaseAuthentication):
     def authenticate(self, request):
         """
         Returns a two-tuple of `User` and decoded firebase payload if a valid signature 
-        has been supplied.
+        has been supplied. Otherwise returns `None`.
         """
         firebase_token = self.get_token(request)
+
+        if not firebase_token:
+            return None
 
         try:
             payload = auth.verify_id_token(firebase_token)
         except ValueError:
-            msg = _('Invalid token.')
+            msg = _('Invalid firebase ID token.')
             raise exceptions.AuthenticationFailed(msg)
         except (auth.ExpiredIdTokenError, auth.InvalidIdTokenError, auth.RevokedIdTokenError):
             msg = _('Could not log in.')
@@ -53,7 +55,7 @@ class FirebaseAuthentication(BaseAuthentication):
         """
         auth = get_authorization_header(request).split()
 
-        if not auth:
+        if not auth or auth[0].lower() != self.auth_header_prefix.lower().encode():
             return None
 
         if len(auth) == 1:
@@ -62,9 +64,6 @@ class FirebaseAuthentication(BaseAuthentication):
         elif len(auth) > 2:
             msg = _('Invalid Authorization header. Credentials string should not contain spaces.')
             raise exceptions.AuthenticationFailed(msg)
-
-        if smart_text(auth[0].lower()) != self.auth_header_prefix.lower():
-            return None
 
         return auth[1]
 
