@@ -114,7 +114,7 @@ class FirebaseAuthentication(BaseFirebaseAuthentication):
     Token based authentication using firebase.
 
     Clients should authenticate by passing a Firebase ID token in the
-    Authorizaiton header using Bearer scheme.
+    Authorization header using Bearer scheme.
     """
 
     def get_user(self, uid: str) -> User:
