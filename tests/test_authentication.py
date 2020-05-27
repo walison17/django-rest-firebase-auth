@@ -1,4 +1,5 @@
 import pytest
+import operator
 
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext as _
@@ -6,7 +7,10 @@ from rest_framework import exceptions
 
 from firebase_admin import auth
 
-from firebase_auth.authentication import FirebaseAuthentication
+from firebase_auth.authentication import (
+    BaseFirebaseAuthentication,
+    FirebaseAuthentication,
+)
 from firebase_auth.settings import firebase_auth_settings
 
 
@@ -62,6 +66,38 @@ def make_request(rf):
 @pytest.fixture
 def fake_request(make_request):
     return make_request("Bearer token")
+
+
+@pytest.mark.parametrize(
+    "method,args,exc_msg",
+    [
+        ("get_user", ("fake_uid",), ".get_user() must be overriden."),
+        (
+            "create_user_from_firebase",
+            (
+                "fake_uid",
+                auth.UserRecord(
+                    {
+                        "localId": "fake_uid",
+                        "display_name": "walison17",
+                        "email": "walisonfilipe@hotmail.com",
+                        "email_verified": True,
+                        "disabled": False,
+                    }
+                ),
+            ),
+            ".create_user_from_firebase() must be overriden.",
+        ),
+    ],
+)
+def test_base_abstract_methods_must_be_overriden(method, args, exc_msg):
+    base = BaseFirebaseAuthentication()
+
+    with pytest.raises(NotImplementedError) as exc:
+        mcaller = operator.methodcaller(method, *args)
+        mcaller(base)
+
+    assert str(exc.value) == exc_msg
 
 
 def test_default_uid_field(firebase_authentication):
