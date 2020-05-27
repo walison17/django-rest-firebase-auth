@@ -1,15 +1,16 @@
 from django.contrib.auth import get_user_model
-from django.conf import settings
 from django.utils.translation import gettext as _
 from rest_framework import exceptions
 from rest_framework.authentication import BaseAuthentication, get_authorization_header
 
 from firebase_admin import auth, credentials, initialize_app
 
+from firebase_auth.settings import firebase_auth_settings
+
 
 User = get_user_model()
 
-cred = credentials.Certificate(settings.FIREBASE_APP_CREDENTIALS)
+cred = credentials.Certificate(firebase_auth_settings.SERVICE_ACCOUNT_KEY_FILE)
 initialize_app(cred)
 
 
@@ -77,12 +78,12 @@ class BaseFirebaseAuthentication(BaseAuthentication):
             msg = _("Firebase anonymous sign-in is not supported.")
             raise exceptions.AuthenticationFailed(msg)
 
-        uid = payload["uid"]
-
-        if settings.FIREBASE_EMAIL_VERIFICATION:
+        if firebase_auth_settings.EMAIL_VERIFICATION:
             if not payload["email_verified"]:
                 msg = _("User email not yet confirmed.")
                 raise exceptions.AuthenticationFailed(msg)
+
+        uid = payload["uid"]
 
         try:
             user = self.get_user(uid)

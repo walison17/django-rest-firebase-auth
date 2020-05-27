@@ -7,6 +7,7 @@ from rest_framework import exceptions
 from firebase_admin import auth
 
 from firebase_auth.authentication import FirebaseAuthentication
+from firebase_auth.settings import firebase_auth_settings
 
 
 User = get_user_model()
@@ -136,9 +137,9 @@ def test_authenticate_with_anonymous_method(
 
 
 def test_authenticate_with_email_verification_disabled(
-    firebase_authentication, firebase_uid, firebase_payload, settings, user
+    firebase_authentication, firebase_uid, firebase_payload, user
 ):
-    settings.FIREBASE_EMAIL_VERIFICATION = False
+    firebase_auth_settings.EMAIL_VERIFICATION = False
 
     firebase_payload["email_verified"] = False
 
@@ -146,9 +147,9 @@ def test_authenticate_with_email_verification_disabled(
 
 
 def test_authenticate_with_email_verification_enabled(
-    firebase_authentication, firebase_uid, firebase_payload, settings
+    firebase_authentication, firebase_uid, firebase_payload
 ):
-    settings.FIREBASE_EMAIL_VERIFICATION = True
+    firebase_auth_settings.EMAIL_VERIFICATION = True
 
     firebase_payload["email_verified"] = False
 
@@ -218,3 +219,14 @@ def test_authenticate_header(
     header = firebase_authentication.authenticate_header(fake_request)
 
     assert header == result_header
+
+
+@pytest.mark.parametrize(
+    "key,value", [("SERVICE_ACCOUNT_KEY_FILE", ""), ("EMAIL_VERIFICATION", False)]
+)
+def test_default_settings(settings, key, value):
+    settings.FIREBASE_AUTH = {}
+
+    firebase_auth_settings.reload()
+
+    assert getattr(firebase_auth_settings, key) == value

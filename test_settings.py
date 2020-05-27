@@ -123,5 +123,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
 }
 
-FIREBASE_APP_CREDENTIALS = "tests/data/testServiceAccountKey.json"
-FIREBASE_EMAIL_VERIFICATION = False
+FIREBASE_AUTH = {
+    "SERVICE_ACCOUNT_KEY_FILE": "tests/data/testServiceAccountKey.json",
+    "EMAIL_VERIFICATION": False,
+}
