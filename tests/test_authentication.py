@@ -230,7 +230,7 @@ def test_create_new_user_with_firebase_payload(
         [auth.RevokedIdTokenError(message="revoked id token"), _("Could not log in.")],
     ],
 )
-def test_authenticate_with_expired_token(
+def test_authenticate_raises_exception(
     mocker, side_effect, exc_message, firebase_authentication, fake_request
 ):
     mocker.patch(
