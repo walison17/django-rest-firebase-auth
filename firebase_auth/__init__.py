@@ -1,4 +1,4 @@
-__title__ = 'drf-firebase-auth'
+__title__ = 'django-rest-firebase-auth'
 __version__ = '0.2.0'
 __author__ = 'Walison Filipe'
 __license__ = 'MIT'
