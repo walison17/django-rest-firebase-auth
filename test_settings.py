@@ -124,6 +124,5 @@ REST_FRAMEWORK = {
 }
 
 FIREBASE_AUTH = {
-    "SERVICE_ACCOUNT_KEY_FILE": "tests/data/testServiceAccountKey.json",
     "EMAIL_VERIFICATION": False,
 }

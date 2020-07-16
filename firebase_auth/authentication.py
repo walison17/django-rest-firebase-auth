@@ -3,15 +3,12 @@ from django.utils.translation import gettext as _
 from rest_framework import exceptions
 from rest_framework.authentication import BaseAuthentication, get_authorization_header
 
-from firebase_admin import auth, credentials, initialize_app
+from firebase_admin import auth
 
 from firebase_auth.settings import firebase_auth_settings
 
 
 User = get_user_model()
-
-cred = credentials.Certificate(firebase_auth_settings.SERVICE_ACCOUNT_KEY_FILE)
-initialize_app(cred)
 
 
 class BaseFirebaseAuthentication(BaseAuthentication):
