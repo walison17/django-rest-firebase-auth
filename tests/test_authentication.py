@@ -71,7 +71,7 @@ def fake_request(make_request):
 @pytest.mark.parametrize(
     "method,args,exc_msg",
     [
-        ("get_user", ("fake_uid",), ".get_user() must be overriden."),
+        ("get_user", ("fake_uid",), ".get_user() must be overridden."),
         (
             "create_user_from_firebase",
             (
@@ -86,11 +86,11 @@ def fake_request(make_request):
                     }
                 ),
             ),
-            ".create_user_from_firebase() must be overriden.",
+            ".create_user_from_firebase() must be overridden.",
         ),
     ],
 )
-def test_base_abstract_methods_must_be_overriden(method, args, exc_msg):
+def test_base_abstract_methods_must_be_overridden(method, args, exc_msg):
     base = BaseFirebaseAuthentication()
 
     with pytest.raises(NotImplementedError) as exc:

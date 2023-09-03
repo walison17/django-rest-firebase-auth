@@ -92,13 +92,13 @@ class BaseFirebaseAuthentication(BaseAuthentication):
 
     def get_user(self, uid: str) -> User:
         """Returns the user with given uid"""
-        raise NotImplementedError(".get_user() must be overriden.")
+        raise NotImplementedError(".get_user() must be overridden.")
 
     def create_user_from_firebase(
         self, uid: str, firebase_user: auth.UserRecord
     ) -> User:
         """Creates a new user with firebase info"""
-        raise NotImplementedError(".create_user_from_firebase() must be overriden.")
+        raise NotImplementedError(".create_user_from_firebase() must be overridden.")
 
     def authenticate_header(self, request):
         return '{} realm="{}"'.format(
