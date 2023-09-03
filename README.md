@@ -32,7 +32,7 @@ Get your admin credentials `.json` from the Firebase SDK and add them to your pr
 
 ```python
 FIREBASE_AUTH = {
-    "SERVICE_ACCOUNT_KEY_FILE" = "path_to_your_credentials.json"
+    "SERVICE_ACCOUNT_KEY_FILE": "path_to_your_credentials.json"
 }
 ```
 
