@@ -6,7 +6,7 @@ Use firebase authentication with your django rest framework project
 
 ## Requirements
 
-- Python (3.5, 3.6, 3.7 or 3.8)
+- Python >= 3.7
 - Django >= 2.2
 - Django Rest Framework
 
