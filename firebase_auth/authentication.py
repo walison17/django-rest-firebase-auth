@@ -120,6 +120,7 @@ class FirebaseAuthentication(BaseFirebaseAuthentication):
     def create_user_from_firebase(
         self, uid: str, firebase_user: auth.UserRecord
     ) -> User:
-        fields = {self.uid_field: uid, "email": firebase_user.email}
+        query = {self.uid_field: uid}
+        user, _ = User.objects.get_or_create(**query, defaults={"email": firebase_user.email})
 
-        return User.objects.create(**fields)
+        return user
